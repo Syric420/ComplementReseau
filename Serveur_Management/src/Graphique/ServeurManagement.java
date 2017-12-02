@@ -5,6 +5,7 @@
  */
 package Graphique;
 
+import SNMP.SnmpLib;
 import Utilities.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -79,6 +80,11 @@ public class ServeurManagement extends javax.swing.JFrame {
         });
 
         jButton1.setText("Go");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Valeur:");
 
@@ -108,19 +114,18 @@ public class ServeurManagement extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jTF_Valeur, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTF_IpAddress)
-                            .addComponent(jTF_Community, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCB_Operation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTF_Valeur, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTF_IpAddress)
+                                .addComponent(jTF_Community, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(59, 59, 59))
         );
         layout.setVerticalGroup(
@@ -157,7 +162,7 @@ public class ServeurManagement extends javax.swing.JFrame {
 
     private void jCB_OperationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCB_OperationItemStateChanged
         // TODO add your handling code here:
-        System.out.println("Salut");
+        //System.out.println("Salut");
         if(jCB_Operation.getSelectedItem().equals("Set"))
         {
             jTF_Valeur.setEnabled(true);
@@ -167,6 +172,12 @@ public class ServeurManagement extends javax.swing.JFrame {
             jTF_Valeur.setEnabled(false);
         }
     }//GEN-LAST:event_jCB_OperationItemStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SnmpLib snmpLib = new SnmpLib(jTF_Community.getText(),jTF_IpAddress.getText()+"/161");
+        
+        snmpLib.Set();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
