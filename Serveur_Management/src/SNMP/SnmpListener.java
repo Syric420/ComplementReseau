@@ -5,6 +5,7 @@
  */
 package SNMP;
 
+import java.util.Vector;
 import org.snmp4j.Snmp;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.event.ResponseListener;
@@ -16,9 +17,11 @@ import org.snmp4j.event.ResponseListener;
 public class SnmpListener implements ResponseListener
 {
     private Snmp snmpManager;
+    private String resultat;
     public SnmpListener (Snmp s)
     {
         snmpManager = s;
+        resultat = null;
     }
     
     @Override
@@ -26,10 +29,26 @@ public class SnmpListener implements ResponseListener
     {
         ((Snmp)event.getSource()).cancel(event.getRequest(), this);
         System.out.println("Réponse reçue (PDU): "+event.getResponse());
+        
+        Vector vecReponse = event.getResponse().getVariableBindings();
+        if(vecReponse.size()==1)
+            resultat = vecReponse.elementAt(0).toString();
+        /*for (int i=0; i<vecReponse.size(); i++)
+        {
+            System.out.println("Elément n°"+i+ " : "+vecReponse.elementAt(i));
+        }*/
+        //resultat = event.getResponse().;
         synchronized(snmpManager)
         {
             snmpManager.notify();
         }
+    }
+
+    /**
+     * @return the resultat
+     */
+    public String getResultat() {
+        return resultat;
     }
 }
             

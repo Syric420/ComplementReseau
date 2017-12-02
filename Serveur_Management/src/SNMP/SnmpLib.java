@@ -43,13 +43,13 @@ public class SnmpLib {
     }
     
     
-    public void Get()
+    public String Get(String o)
     {
         try
         {
             
             PDU pdu = new PDU();
-            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.1.0")));
+            pdu.add(new VariableBinding(new OID(o)));
             pdu.setType(PDU.GET);
             SnmpListener listener = new SnmpListener(snmp);
             snmp.send(pdu, target, null, listener);
@@ -57,6 +57,7 @@ public class SnmpLib {
             {
                 snmp.wait();
             }
+            return listener.getResultat();
         }
         catch (IOException ex)
         {
@@ -66,10 +67,10 @@ public class SnmpLib {
         {
             Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+      return null;
     }
     
-    public void Set()
+    public void Set(String o, String value)
     {
         try
         {

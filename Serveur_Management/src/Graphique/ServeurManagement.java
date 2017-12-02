@@ -60,7 +60,7 @@ public class ServeurManagement extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jTF_Valeur = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jCBox_Oid = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,13 +89,8 @@ public class ServeurManagement extends javax.swing.JFrame {
         jLabel5.setText("Valeur:");
 
         jTF_Valeur.setEnabled(false);
-        jTF_Valeur.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTF_ValeurActionPerformed(evt);
-            }
-        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nom du contact", "Type de machine", "Masque sous réseau", "Adresse IP interface" }));
+        jCBox_Oid.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nom du contact", "Type de machine", "Adresse IP interface", "Masque sous réseau", " " }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,7 +105,7 @@ public class ServeurManagement extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(6, 6, 6)
-                        .addComponent(jComboBox1, 0, 130, Short.MAX_VALUE)))
+                        .addComponent(jCBox_Oid, 0, 130, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -145,7 +140,7 @@ public class ServeurManagement extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jCB_Operation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCBox_Oid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -155,10 +150,6 @@ public class ServeurManagement extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTF_ValeurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTF_ValeurActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTF_ValeurActionPerformed
 
     private void jCB_OperationItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCB_OperationItemStateChanged
         // TODO add your handling code here:
@@ -175,8 +166,37 @@ public class ServeurManagement extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         SnmpLib snmpLib = new SnmpLib(jTF_Community.getText(),jTF_IpAddress.getText()+"/161");
+        switch(jCBox_Oid.getSelectedItem().toString())
+        {
+            case "Nom du contact":
+                if(jCB_Operation.getSelectedItem().toString().equals("Get"))
+                {
+                    snmpLib.Get(".1.3.6.1.2.1.1.5.0");
+                }
+                break;
+            case "Type de machine":
+                if(jCB_Operation.getSelectedItem().toString().equals("Get"))
+                {
+                    snmpLib.Get(".1.3.6.1.2.1.1.1.0");
+                }
+                break;
+                
+            case "Adresse IP interface":
+                if(jCB_Operation.getSelectedItem().toString().equals("Get"))
+                {
+                    
+                    jTF_Valeur.setText(snmpLib.Get(".1.3.6.1.2.1.4.20.1.1."+jTF_IpAddress.getText()));
+                }
+                break;
+            case "Masque sous réseau":
+                if(jCB_Operation.getSelectedItem().toString().equals("Get"))
+                {
+                    snmpLib.Get(".1.3.6.1.2.1.4.20.1.3."+jTF_IpAddress.getText());
+                }
+                break;
+                    
+        }
         
-        snmpLib.Set();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -218,7 +238,7 @@ public class ServeurManagement extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jCB_Operation;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jCBox_Oid;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
