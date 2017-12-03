@@ -10,6 +10,7 @@ import Utilities.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -20,6 +21,8 @@ public class ServeurManagement extends javax.swing.JFrame {
     /**
      * Creates new form ServeurApplication
      */
+    
+    public DefaultListModel modelJlist = new DefaultListModel();
     
     public ServeurManagement() {
         initComponents();
@@ -61,8 +64,17 @@ public class ServeurManagement extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTF_Valeur = new javax.swing.JTextField();
         jCBox_Oid = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jTF_IpAddress.setText("127.0.0.1");
 
         jLabel1.setText("Adresse IP de l'agent:");
 
@@ -92,6 +104,35 @@ public class ServeurManagement extends javax.swing.JFrame {
 
         jCBox_Oid.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nom du contact", "Type de machine", "Adresse IP interface", "Masque sous réseau", " " }));
 
+        jList1.setModel(modelJlist);
+        jScrollPane1.setViewportView(jList1);
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("Quitter");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Liste");
+
+        jMenuItem2.setText("Clear");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,29 +140,34 @@ public class ServeurManagement extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(6, 6, 6)
-                        .addComponent(jCBox_Oid, 0, 130, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCB_Operation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTF_Valeur, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTF_IpAddress)
-                                .addComponent(jTF_Community, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(59, 59, 59))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(6, 6, 6)
+                                .addComponent(jCBox_Oid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCB_Operation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTF_Valeur, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jTF_IpAddress)
+                                        .addComponent(jTF_Community, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(59, 59, 59))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +191,9 @@ public class ServeurManagement extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTF_Valeur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -161,43 +209,53 @@ public class ServeurManagement extends javax.swing.JFrame {
         else
         {
             jTF_Valeur.setEnabled(false);
+            jTF_Valeur.setText("");
         }
     }//GEN-LAST:event_jCB_OperationItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SnmpLib snmpLib = new SnmpLib(jTF_Community.getText(),jTF_IpAddress.getText()+"/161");
+        SnmpLib snmpLib = new SnmpLib(jTF_Community.getText(),jTF_IpAddress.getText()+"/161", this);
         switch(jCBox_Oid.getSelectedItem().toString())
         {
             case "Nom du contact":
                 if(jCB_Operation.getSelectedItem().toString().equals("Get"))
-                {
                     snmpLib.Get(".1.3.6.1.2.1.1.5.0");
-                }
+                else
+                    snmpLib.Set(".1.3.6.1.2.1.1.5.0", jTF_Valeur.getText());
                 break;
             case "Type de machine":
                 if(jCB_Operation.getSelectedItem().toString().equals("Get"))
-                {
                     snmpLib.Get(".1.3.6.1.2.1.1.1.0");
-                }
+                else
+                    snmpLib.Set(".1.3.6.1.2.1.1.1.0", jTF_Valeur.getText());
                 break;
                 
             case "Adresse IP interface":
                 if(jCB_Operation.getSelectedItem().toString().equals("Get"))
-                {
-                    
-                    jTF_Valeur.setText(snmpLib.Get(".1.3.6.1.2.1.4.20.1.1."+jTF_IpAddress.getText()));
-                }
+                    snmpLib.Get(".1.3.6.1.2.1.4.20.1.1."+jTF_IpAddress.getText());
+                else
+                    snmpLib.Set(".1.3.6.1.2.1.4.20.1.1."+jTF_IpAddress.getText(), jTF_Valeur.getText());
                 break;
             case "Masque sous réseau":
                 if(jCB_Operation.getSelectedItem().toString().equals("Get"))
-                {
                     snmpLib.Get(".1.3.6.1.2.1.4.20.1.3."+jTF_IpAddress.getText());
-                }
+                else
+                    snmpLib.Set(".1.3.6.1.2.1.4.20.1.3."+jTF_IpAddress.getText(), jTF_Valeur.getText());
                 break;
                     
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        modelJlist.removeAllElements();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -244,6 +302,13 @@ public class ServeurManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTF_Community;
     private javax.swing.JTextField jTF_IpAddress;
     private javax.swing.JTextField jTF_Valeur;

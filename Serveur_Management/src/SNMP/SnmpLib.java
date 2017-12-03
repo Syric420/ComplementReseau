@@ -5,6 +5,7 @@
  */
 package SNMP;
 
+import Graphique.ServeurManagement;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +25,9 @@ public class SnmpLib {
     private TransportMapping transport;
     private Snmp snmp;
     private CommunityTarget target;
+    private ServeurManagement gui;
     
-    public SnmpLib(String comm, String targetAd) {
+    public SnmpLib(String comm, String targetAd, ServeurManagement g) {
         try {
             transport = new DefaultUdpTransportMapping();
             transport.listen();
@@ -37,13 +39,14 @@ public class SnmpLib {
             target.setRetries(2);
             target.setTimeout(1500);
             target.setVersion(SnmpConstants.version2c);
+            gui = g;
         } catch (IOException ex) {
             Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     
-    public String Get(String o)
+    public void Get(String o)
     {
         try
         {
@@ -51,45 +54,26 @@ public class SnmpLib {
             PDU pdu = new PDU();
             pdu.add(new VariableBinding(new OID(o)));
             pdu.setType(PDU.GET);
-            SnmpListener listener = new SnmpListener(snmp);
+            SnmpListener listener = new SnmpListener(snmp, gui);
             snmp.send(pdu, target, null, listener);
-            synchronized(snmp)
-            {
-                snmp.wait();
-            }
-            return listener.getResultat();
         }
         catch (IOException ex)
         {
             Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (InterruptedException ex)
-        {
-            Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      return null;
     }
     
     public void Set(String o, String value)
     {
         try
         {
-            
             PDU pdu = new PDU();
-            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.5.0"), new OctetString("Vince")));
+            pdu.add(new VariableBinding(new OID(o), new OctetString(value)));
             pdu.setType(PDU.SET);
-            SnmpListener listener = new SnmpListener(snmp);
+            SnmpListener listener = new SnmpListener(snmp, gui);
             snmp.send(pdu, target, null, listener);
-            synchronized(snmp)
-            {
-                snmp.wait();
-            }
         }
         catch (IOException ex)
-        {
-            Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (InterruptedException ex)
         {
             Logger.getLogger(SnmpLib.class.getName()).log(Level.SEVERE, null, ex);
         }
