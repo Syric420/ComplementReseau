@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.tibha.myapplication.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <EditText
+            android:id="@+id/textLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignLeft="@+id/textPassword"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/textPassword"
+            android:layout_marginTop="49dp"
+            android:ems="10"
+            android:hint="Login"
+            android:inputType="textPersonName"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:text=""
+            android:textAlignment="viewStart"
+            tools:layout_editor_absoluteX="45dp"
+            tools:layout_editor_absoluteY="57dp" />
+
+        <EditText
+            android:id="@+id/textPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textLogin"
+            android:layout_marginLeft="48dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="38dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            tools:layout_editor_absoluteX="45dp"
+            tools:layout_editor_absoluteY="141dp" />
+
+        <Button
+            android:id="@+id/buLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textPassword"
+            android:layout_alignStart="@+id/textPassword"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="63dp"
+            android:layout_marginStart="63dp"
+            android:onClick="login"
+            android:text="LOGIN"
+            tools:layout_editor_absoluteX="118dp"
+            tools:layout_editor_absoluteY="217dp" />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
