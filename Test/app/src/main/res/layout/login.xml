@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.tibha.myapplication.MainActivity">
+    tools:context="com.example.tibha.myapplication.InterfaceLogin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
             android:text=""
             android:textAlignment="viewStart"
             tools:layout_editor_absoluteX="45dp"
-            tools:layout_editor_absoluteY="57dp" />
+            tools:layout_editor_absoluteY="57dp"
+            android:gravity="start" />
 
         <EditText
             android:id="@+id/textPassword"
