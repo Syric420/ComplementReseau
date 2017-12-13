@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".InterfaceLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Succes">
+        <activity android:name=".InterfaceBagage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

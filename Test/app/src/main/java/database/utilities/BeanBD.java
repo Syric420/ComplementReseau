@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package database.utilities;
+import ProtocoleLUGAPM.Bagage;
 import Utilities.ReadProperties;
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -18,7 +21,7 @@ public class BeanBD {
     private Connection con;
     private Statement instruc;
     private ResultSet rs;
-    
+
     public BeanBD()
     {
         typeBD = "";
@@ -65,7 +68,7 @@ public class BeanBD {
     public void setInstruc(Statement instruc) {
         this.instruc = instruc;
     }
-    
+
     public int connect()
     {
         Class leDriver;
@@ -81,21 +84,21 @@ public class BeanBD {
                 s = new String(getTypeBD()+"_DRIVER");
                 leDriver = Class.forName(rP.getProp(s));
                 String address,user,pwd;
-                
+
                 s = new String(getTypeBD()+"_ADDRESS");
                 address = rP.getProp(s);
-                
+
                 s = new String(getTypeBD()+"_USER");
                 user = rP.getProp(s);
-                
+
                 s = new String(getTypeBD()+"_PASSWORD");
                 pwd = rP.getProp(s);
                 setCon(DriverManager.getConnection(address,user,pwd));
                 setInstruc(getCon().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE));
             }
             catch (ClassNotFoundException e)
-            { 
-                System.out.println("Driver adéquat non trouvable : " + e.getMessage()); 
+            {
+                System.out.println("Driver adéquat non trouvable : " + e.getMessage());
             } catch (IOException ex) {
                 Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -131,7 +134,7 @@ public class BeanBD {
     }
     public String findBagages(String Requete)
     {
-        
+
         String str = "";
         String monVec[]={};
         try {
@@ -148,10 +151,10 @@ public class BeanBD {
             }
             monVec = str.split(";");
             str=str + "@";
-            
+
             while(getRs().next())
             {
-                
+
                 str=str + getRs().getString(monVec[0]) + ";";
                 str=str + getRs().getBoolean(monVec[1]) + ";";
                 str=str + getRs().getFloat(monVec[2]) + ";";
@@ -169,6 +172,7 @@ public class BeanBD {
     }
     public synchronized void updateLug(String str)
     {
+
         try {
             String monVec[]={};
             monVec = str.split(";");
@@ -177,14 +181,52 @@ public class BeanBD {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public Vector<Bagage> showLugage()
+    {
+        String str = "";
+        String monString[]={};
+        Vector<Bagage> monVec = new Vector<Bagage>();
+        try {
+            setRs(getInstruc().executeQuery("SELECT * FROM sys.bagages where `Charge en soute` = 'N';"));
+            ResultSetMetaData rsmd = getRs().getMetaData();
+            int nbrCol = rsmd.getColumnCount();
+            for(int i=0; i<nbrCol;i++)
+            {
+                if(i+1 == nbrCol)
+                    str= str + rsmd.getColumnName(i+1);
+                else
+                    str= str + rsmd.getColumnName(i+1) + ";";
+            }
+
+            monString = str.split(";");
+
+
+            while(getRs().next())
+            {
+                Bagage monBagage = new Bagage(getRs().getString(monString[0]),
+                        getRs().getInt(monString[1]),
+                        getRs().getFloat(monString[2]),
+                        getRs().getString(monString[3]),
+                        getRs().getString(monString[5])
+                );
+                System.out.println(monBagage);
+                monVec.add(monBagage);
+            }
+            return monVec;
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     public String findVols()
     {
-        
+
         String str = "";
         String monVec[]={};
         try {
             setRs(getInstruc().executeQuery("select * from vols where HeureDepart = curdate();"));
-            
+
             ResultSetMetaData rsmd = getRs().getMetaData();
             int nbrCol = rsmd.getColumnCount();
             for(int i=0; i<nbrCol;i++)
@@ -196,10 +238,10 @@ public class BeanBD {
             }
             monVec = str.split(";");
             str=str + "@";
-            
+
             while(getRs().next())
             {
-                
+
                 str=str + getRs().getInt(monVec[0]) + ";";
                 str=str + getRs().getString(monVec[1]) + ";";
                 str=str + getRs().getDate(monVec[2]) + ";";
@@ -208,13 +250,13 @@ public class BeanBD {
                 str=str+"@";
             }
 
-            
+
             return str;
         } catch (SQLException ex) {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-    
-    
+
+
 }

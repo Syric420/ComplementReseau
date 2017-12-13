@@ -12,17 +12,17 @@ import java.net.InetAddress;
 import java.net.Socket;
 import android.os.*;
 
-public class MainActivity extends AppCompatActivity {
+public class InterfaceLogin extends AppCompatActivity {
 
     private boolean logged;
     private ObjectInputStream ois;
-    private Socket cliSock;
+    public static Socket cliSock;
     private int PORT_CHECKIN;
     private String IP_ADDRESS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login);
     }
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 try
 
                 {
-                    cliSock = new Socket(InetAddress.getByName("10.59.22.107"),26084);
+                    cliSock = new Socket(InetAddress.getByName("192.168.1.51"),26084);
                 } catch (
                         IOException e)
 
@@ -103,13 +103,11 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                if (rep.getChargeUtile().
-
-                        equals("LOGIN OK"))
+                if (rep.getChargeUtile().equals("LOGIN OK"))
 
                 {
                     System.out.println("Connection OK");
-                    Intent coOK = new Intent(MainActivity.this,Succes.class);
+                    Intent coOK = new Intent(InterfaceLogin.this,InterfaceBagage.class);
                     startActivity(coOK);
                 } else
 
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             public void run()
             {
-                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(InterfaceLogin.this, toast, Toast.LENGTH_SHORT).show();
             }
         });
     }
