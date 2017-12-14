@@ -25,6 +25,7 @@ import android.widget.Toast;
 public class InterfaceBagage extends Activity implements AdapterView.OnItemClickListener{
     List<Bagage> modeleBagage = new ArrayList<Bagage>();
     ArrayAdapter<Bagage> controleurBagage = null;
+    ListView vueBagage = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +89,23 @@ public class InterfaceBagage extends Activity implements AdapterView.OnItemClick
     }
 
 
+    public void bagage(View view)
+    {
+
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Toast.makeText(this, " checked : " , Toast.LENGTH_SHORT).show();
+
+        if(!(modeleBagage.get(i).isChargeEnSoute().equalsIgnoreCase("N")))
+        {
+            modeleBagage.get(i).setChargeEnSoute("O");
+            Toast.makeText(this, "Chargé en soute = 0", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            modeleBagage.get(i).setChargeEnSoute("N");
+            Toast.makeText(this, "Chargé en soute = N", Toast.LENGTH_SHORT).show();
+        }
     }
 }
