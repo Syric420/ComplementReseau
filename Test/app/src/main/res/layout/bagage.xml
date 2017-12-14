@@ -21,6 +21,7 @@
             android:id="@+id/bSauvegarder"
             android:layout_width="match_parent"
             android:layout_height="46dp"
+            android:onClick="bagage"
             android:text="Sauvegarder" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

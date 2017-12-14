@@ -4,14 +4,19 @@
  * and open the template in the editor.
  */
 package database.utilities;
-import ProtocoleLUGAPM.Bagage;
-import Utilities.ReadProperties;
 import java.io.IOException;
-import java.sql.*;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import ProtocoleLUGAPM.Bagage;
+import Utilities.ReadProperties;
 /**
  *
  * @author Vince
@@ -39,6 +44,8 @@ public class BeanBD {
     public void setTypeBD(String typeBD) {
         if(typeBD.equalsIgnoreCase("oracle") || typeBD.equalsIgnoreCase("mysql"))
             this.typeBD = typeBD;
+        //else
+            //javax.swing.JOptionPane.showMessageDialog(null, "Erreur - deux choix possible : \"Oracle\" ou \"MySQL\"");
     }
 
     /**
@@ -182,7 +189,7 @@ public class BeanBD {
         }
     }
 
-    public Vector<Bagage> showLugage()
+    public Vector<Bagage> getLugage()
     {
         String str = "";
         String monString[]={};

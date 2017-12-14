@@ -34,10 +34,18 @@ public class RequeteLUGAP implements Requete, Serializable
     private int type;
     private String chargeUtile;
     private Socket socketClient;
+    private Vector<Bagage> vecBagage;
     public RequeteLUGAP(int t, String chu)
     {
         type = t; setChargeUtile(chu);
         ByteArray = null;
+        vecBagage=null;
+    }
+    public RequeteLUGAP(int t, String chu,Vector<Bagage> vec )
+    {
+        type = t; setChargeUtile(chu);
+        ByteArray = null;
+        vecBagage=null;
     }
     public RequeteLUGAP(int t, String chu, Socket s,BeanBD B, BeanRequete R)
     {
@@ -45,8 +53,9 @@ public class RequeteLUGAP implements Requete, Serializable
         ByteArray = null;
         Bc=B;
         Br=R;
-
+        vecBagage=null;
     }
+
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
     {
         if(getType() == REQUEST_CONNECT)
@@ -117,7 +126,8 @@ public class RequeteLUGAP implements Requete, Serializable
     {
         //System.out.println("UPDATE" + getChargeUtile());
         cs.TraceEvenements("Serveur#Effectue un show lugage");
-        ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.LUG_SHOW, "Show Lugage", Bc.showLugage());
+        ReponseLUGAP rep = new ReponseLUGAP(ReponseLUGAP.LUG_SHOW, "Show Lugage", Bc.getLugage());
+        System.out.println(rep.getVecBagage());
         ObjectOutputStream oos;
         try
         {
