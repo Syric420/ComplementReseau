@@ -1,0 +1,4 @@
+protocol = aller retour
+afficher vols puis bagages
+fermer les flux  ou passer par intent
+rafraichir affichage apres sauvegarde par ex
