@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import ProtocoleLUGAP.ReponseLUGAP;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.*;
 import android.widget.Toast;
 
-public class InterfaceBagage extends Activity implements AdapterView.OnItemClickListener{
+public class InterfaceBagage extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener{
     List<Bagage> modeleBagage = new ArrayList<Bagage>();
     ArrayAdapter<Bagage> controleurBagage = null;
     ListView vueBagage = null;
@@ -36,10 +37,14 @@ public class InterfaceBagage extends Activity implements AdapterView.OnItemClick
         vueBagage.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         vueBagage.setAdapter(controleurBagage);
         vueBagage.setOnItemClickListener(this);
+
+        Button b = (Button) this.findViewById(R.id.bSauvegarder);
+        b.setOnClickListener(this);
+
         Thread thread = new Thread(new Runnable()
-        {
-            @Override
-            public void run() {
+            {
+                @Override
+                public void run() {
         RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_SHOWLUGAGE, "Charge utile");;
         ObjectOutputStream oos = null;
         try
@@ -89,12 +94,38 @@ public class InterfaceBagage extends Activity implements AdapterView.OnItemClick
     }
 
 
-    public void bagage(View view)
-    {
+    public void onClick(View v)
+    { if (v == this.findViewById(R.id.bSauvegarder))
+    { String msg = "Salut";
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+
+        Thread thread = new Thread(new Runnable()
+        {
+            @Override
+            public void run() {
+                Vector<Bagage> monVec = new Vector<Bagage>();
+                for(int i=0; i<modeleBagage.size();i++)
+                {
+                    monVec.add(modeleBagage.get(i));
+                }
+                RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_SHOWLUGAGE, "Charge utile", monVec);;
+                ObjectOutputStream oos = null;
+                try
+                {
+                    oos = new ObjectOutputStream(InterfaceLogin.cliSock.getOutputStream());
+                    oos.writeObject(req); oos.flush();
+                }
+                catch (IOException e)
+                {
+                    System.err.println("Erreur réseau ? [" + e.getMessage() + "]");
+                }
+            }
+        });thread.start();
 
     }
+    }
 
-    @Override
+        @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         if(!(modeleBagage.get(i).isChargeEnSoute().equalsIgnoreCase("N")))
