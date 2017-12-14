@@ -53,7 +53,7 @@ public class InterfaceLogin extends AppCompatActivity {
                 try
 
                 {
-                    cliSock = new Socket(InetAddress.getByName("192.168.1.51"),26084);
+                    cliSock = new Socket(InetAddress.getByName("10.59.22.29"),26084);
                 } catch (
                         IOException e)
 

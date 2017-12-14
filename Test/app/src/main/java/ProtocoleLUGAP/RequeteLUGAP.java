@@ -41,11 +41,11 @@ public class RequeteLUGAP implements Requete, Serializable
         ByteArray = null;
         vecBagage=null;
     }
-    public RequeteLUGAP(int t, String chu,Vector<Bagage> vec )
+    public RequeteLUGAP(int t, String chu, Vector<Bagage> vec)
     {
         type = t; setChargeUtile(chu);
         ByteArray = null;
-        vecBagage=null;
+        vecBagage=vec;
     }
     public RequeteLUGAP(int t, String chu, Socket s,BeanBD B, BeanRequete R)
     {
@@ -54,6 +54,14 @@ public class RequeteLUGAP implements Requete, Serializable
         Bc=B;
         Br=R;
         vecBagage=null;
+    }
+    public RequeteLUGAP(int t, String chu, Socket s,BeanBD B, BeanRequete R, Vector<Bagage> vec)
+    {
+        type = t; setChargeUtile(chu); socketClient =s;
+        ByteArray = null;
+        Bc=B;
+        Br=R;
+        vecBagage=vec;
     }
 
     public Runnable createRunnable (final Socket s, final ConsoleServeur cs)
@@ -143,8 +151,12 @@ public class RequeteLUGAP implements Requete, Serializable
     private void updateAllBagages(ConsoleServeur cs)
     {
         //System.out.println("UPDATE" + getChargeUtile());
-        Bc.updateLug(getChargeUtile());
-        cs.TraceEvenements("Serveur#Effectue un UPDATE");
+        cs.TraceEvenements("Serveur#Effectue un updateAllBagages");
+        if(vecBagage.size()>0)
+        {
+            Bc.updateAllLug(vecBagage);
+
+        }
     }
 
     private void updateBagages(ConsoleServeur cs)

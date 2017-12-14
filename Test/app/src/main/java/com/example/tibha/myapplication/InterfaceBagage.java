@@ -96,8 +96,8 @@ public class InterfaceBagage extends Activity implements View.OnClickListener, A
 
     public void onClick(View v)
     { if (v == this.findViewById(R.id.bSauvegarder))
-    { String msg = "Salut";
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    { /*String msg = "Salut";
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();*/
 
         Thread thread = new Thread(new Runnable()
         {
@@ -108,7 +108,7 @@ public class InterfaceBagage extends Activity implements View.OnClickListener, A
                 {
                     monVec.add(modeleBagage.get(i));
                 }
-                RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_SHOWLUGAGE, "Charge utile", monVec);;
+                RequeteLUGAP req = new RequeteLUGAP(RequeteLUGAP.REQUEST_UPDATELUGAGE, "Charge utile", monVec);;
                 ObjectOutputStream oos = null;
                 try
                 {
@@ -127,8 +127,7 @@ public class InterfaceBagage extends Activity implements View.OnClickListener, A
 
         @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        if(!(modeleBagage.get(i).isChargeEnSoute().equalsIgnoreCase("N")))
+        if((modeleBagage.get(i).isChargeEnSoute().equalsIgnoreCase("N")))
         {
             modeleBagage.get(i).setChargeEnSoute("O");
             Toast.makeText(this, "Chargé en soute = 0", Toast.LENGTH_SHORT).show();

@@ -4,19 +4,14 @@
  * and open the template in the editor.
  */
 package database.utilities;
+import ProtocoleLUGAPM.Bagage;
+import Utilities.ReadProperties;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import ProtocoleLUGAPM.Bagage;
-import Utilities.ReadProperties;
 /**
  *
  * @author Vince
@@ -44,8 +39,7 @@ public class BeanBD {
     public void setTypeBD(String typeBD) {
         if(typeBD.equalsIgnoreCase("oracle") || typeBD.equalsIgnoreCase("mysql"))
             this.typeBD = typeBD;
-        //else
-            //javax.swing.JOptionPane.showMessageDialog(null, "Erreur - deux choix possible : \"Oracle\" ou \"MySQL\"");
+
     }
 
     /**
@@ -225,6 +219,21 @@ public class BeanBD {
             Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public synchronized void updateAllLug(Vector<Bagage> vec)
+    {
+
+        try {
+            for(int i=0; i<vec.size();i++)
+            {
+                System.out.println("UPDATE bagages SET `Charge en soute`='"+vec.get(i).isChargeEnSoute()+"' WHERE `idBagages'='"+vec.get(i).getIdBagage()+"';");
+                getInstruc().executeUpdate("UPDATE bagages SET `Charge en soute`='"+vec.get(i).isChargeEnSoute()+"' WHERE `idBagages'='"+vec.get(i).getIdBagage()+"';");
+            }
+            //getInstruc().executeUpdate("UPDATE bagages SET `" + monVec[2] + "`='" + monVec[3] +"' WHERE `" + monVec[0] + "`='" + monVec[1] + "';");
+        } catch (SQLException ex) {
+            Logger.getLogger(BeanBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     public String findVols()
     {
