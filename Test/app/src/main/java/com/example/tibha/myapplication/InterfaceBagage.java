@@ -32,7 +32,7 @@ public class InterfaceBagage extends Activity implements View.OnClickListener, A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bagage);
 
-        ListView vueBagage = (ListView) findViewById(R.id.listBagages);
+        vueBagage = (ListView) findViewById(R.id.listBagages);
         controleurBagage = new ArrayAdapter<Bagage>(this, android.R.layout.simple_list_item_checked, modeleBagage);
         vueBagage.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         vueBagage.setAdapter(controleurBagage);
