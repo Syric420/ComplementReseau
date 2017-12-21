@@ -32,11 +32,13 @@ public class Login extends javax.swing.JDialog {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jPF_mdp = new javax.swing.JPasswordField();
+        jTF_mdp = new javax.swing.JPasswordField();
         jTF_Email = new javax.swing.JTextField();
         jButton_Connect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Connexion");
+        setModal(true);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -69,7 +71,7 @@ public class Login extends javax.swing.JDialog {
                     .addComponent(jButton_Connect)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jTF_Email)
-                        .addComponent(jPF_mdp, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
+                        .addComponent(jTF_mdp, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -82,29 +84,29 @@ public class Login extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jPF_mdp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTF_mdp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton_Connect)
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton_ConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ConnectActionPerformed
         // TODO add your handling code here:
         String user, mdp;
-        if(!jTF_Email.getText().isEmpty() && !jPF_mdp.getText().isEmpty())
+        if(!jTF_Email.getText().isEmpty() && !jTF_mdp.getText().isEmpty())
         {
             user = jTF_Email.getText();
-            mdp = jPF_mdp.getText();
+            mdp = jTF_mdp.getText();
+            ((JApplication_Mail)this.getParent()).setUser(user);
+            ((JApplication_Mail)this.getParent()).setMdp(mdp);
             this.setVisible(false);
         }
         else
             JOptionPane.showMessageDialog(this, "Erreur -  veuillez compléter tous les champs");
-        
-        
-        
     }//GEN-LAST:event_jButton_ConnectActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -158,7 +160,12 @@ public class Login extends javax.swing.JDialog {
     private javax.swing.JButton jButton_Connect;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField jPF_mdp;
     private javax.swing.JTextField jTF_Email;
+    private javax.swing.JPasswordField jTF_mdp;
     // End of variables declaration//GEN-END:variables
+
+    void clearAllText() {
+        jTF_Email.setText("");
+        jTF_mdp.setText("");
+    }
 }
