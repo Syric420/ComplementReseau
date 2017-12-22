@@ -6,6 +6,7 @@
 package Utilities;
 
 import Gui.JApplication_Mail;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,28 +40,57 @@ public class ThreadReception extends Thread{
             Properties prop = System.getProperties();
             
             System.out.println("Création d'une session mail");
-            prop.put("mail.pop3.host", host);
-            prop.put("mail.disable.top", true);
+            prop.put("mail.store.protocol", "pop3s");
+            prop.put("mail.pop3.host", "pop.gmail.com");     
+            prop.put("mail.pop3.user", user);
+            prop.put("mail.pop3.socketFactory", 995);
+            prop.put("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             prop.put("mail.pop3.port", 995);
-            prop.put("mail.smtp.starttls.enable", "true");
-            Session sess = Session.getDefaultInstance(prop, null);
+
+    Session session = Session.getInstance(prop,new Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+          return new PasswordAuthentication(user, mdp);
+
+      }
+    });
+      
+     
+
             //prop.list(System.out);
             String Local = this.getUser();
             String pwd = this.getMdp();
             System.out.println("Obtention d'un objet store");
-            Store st = sess.getStore("pop3");
-            //st.connect(host, Local, pwd);
-            st.connect(host, 995, user, pwd);
+            Store st = session.getStore("pop3");
+            st.connect(Local, pwd);
             System.out.println("Obtention d'un objet folder");
             Folder f = st.getFolder("INBOX");
             f.open(Folder.READ_ONLY);
             System.out.println("Obtention des messages");
+            Message msg[] = f.getMessages();
+            System.out.println("Nombre de messages : " + f.getMessageCount());
+            System.out.println("Nombre de nouveaux messages : " + f.getNewMessageCount());
+            System.out.println("Liste des messages : ");
+            
+            for (int i=0; i<3; i++)
+            {
+            if (msg[i].isMimeType("text/plain"))
+            {
+                System.out.println("Expéditeur : " + msg[i].getFrom() [0]);
+                System.out.println("Sujet = " + msg[i].getSubject());
+                System.out.println("Texte : " + (String)msg[i].getContent());
+                gui.dlm.addElement(msg[i]);
+            }
+            }
+            System.out.println("Fin des messages");
             Thread.sleep(this.getTempsMili());
         } catch (InterruptedException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchProviderException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
+            Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

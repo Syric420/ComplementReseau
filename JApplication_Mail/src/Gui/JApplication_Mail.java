@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class JApplication_Mail extends javax.swing.JFrame {
 
-    DefaultListModel dlm = new DefaultListModel();
+    public DefaultListModel dlm = new DefaultListModel();
     private String user, mdp;
     private EnvoiMessage guiEnvoiMessage;
     private Login log;
@@ -29,7 +29,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
         log = new Login(this, true);
         guiEnvoiMessage = new EnvoiMessage(this, true);
         log.setVisible(true);
-        threadRecep = new ThreadReception(300000, this.getUser(), this.getMdp(), "pop.gmail.com", this);
+        threadRecep = new ThreadReception(300000, this.getUser(), this.getMdp(), "pop-mail.outlook.com", this);
         threadRecep.start();
     }
 
