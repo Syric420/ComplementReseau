@@ -6,7 +6,10 @@
 package Utilities;
 
 import Gui.JApplication_Mail;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,37 +63,62 @@ public class ThreadReception extends Thread{
             //prop.list(System.out);
             String Local = this.getUser();
             String pwd = this.getMdp();
-            System.out.println("Obtention d'un objet store");
             Store st = session.getStore("pop3");
             st.connect(Local, pwd);
-            System.out.println("Obtention d'un objet folder");
             Folder f = st.getFolder("INBOX");
             f.open(Folder.READ_ONLY);
-            System.out.println("Obtention des messages");
             Message msg[] = f.getMessages();
-            System.out.println("Nombre de messages : " + f.getMessageCount());
-            System.out.println("Nombre de nouveaux messages : " + f.getNewMessageCount());
-            System.out.println("Liste des messages : ");
             
-            for (int i=0; i<3; i++)
+            for (int i=0; i<msg.length; i++)
             {
-            if (msg[i].isMimeType("text/plain"))
-            {
-                System.out.println("Expéditeur : " + msg[i].getFrom() [0]);
-                System.out.println("Sujet = " + msg[i].getSubject());
-                System.out.println("Texte : " + (String)msg[i].getContent());
+                Thread.sleep(10);
+                //System.out.println("Date : " + msg[i].getSentDate());
+                // Récupération du conteneur Multipart
+                /*if(msg[i].isMimeType("multipart/*"))
+                {
+                    Multipart msgMP = (Multipart)msg[i].getContent();
+                    int np = msgMP.getCount();
+                    //System.out.println("-- Nombre de composantes = " + np);
+                    // Scan des BodyPart
+                    for (int j=0; j<np; j++)
+                    {
+                        Part p = ((Multipart)msgMP).getBodyPart(j);
+                        String d = p.getDisposition();
+                        if (p.isMimeType("text/plain"))
+                        {
+                            //gui.dlm.addElement(msg[i]);
+                        }
+                        if (d!=null && d.equalsIgnoreCase(Part.ATTACHMENT))
+                        {
+                            InputStream is = p.getInputStream();
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            int c;
+                            while ((c = is.read()) != -1) baos.write(c);
+                            baos.flush();
+                            String nf = p.getFileName();
+                            FileOutputStream fos =new FileOutputStream(nf);
+                            baos.writeTo(fos);
+                            fos.close();
+                        }
+                    } // fin for j
+                    
+                }
+                else if(msg[i].isMimeType("text/*"))
+                {
+                     
+                    
+                    
+                }*/
+                
                 gui.dlm.addElement(msg[i]);
             }
-            }
             System.out.println("Fin des messages");
+            
             Thread.sleep(this.getTempsMili());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchProviderException ex) {
-            Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        }
+        catch (InterruptedException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

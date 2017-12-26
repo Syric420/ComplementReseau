@@ -50,6 +50,10 @@ public class Login extends javax.swing.JDialog {
 
         jLabel2.setText("Mot de passe:");
 
+        jTF_mdp.setText("Tp-link1");
+
+        jTF_Email.setText("vincelempirette@gmail.com");
+
         jButton_Connect.setText("Se connecter");
         jButton_Connect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

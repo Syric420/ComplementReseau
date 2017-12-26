@@ -79,8 +79,14 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jTF_mdp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tp-link1"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTF_Email">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="vincelempirette@gmail.com"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton_Connect">
       <Properties>
