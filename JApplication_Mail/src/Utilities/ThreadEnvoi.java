@@ -26,6 +26,7 @@ public class ThreadEnvoi extends Thread {
     private String subject;
     private String message;
     private JApplication_Mail gui;
+    static String charset = "iso-8859-1";
 
     public ThreadEnvoi(String user, String mdp, String to, String subject, String message, JApplication_Mail gui) {
         this.user = user;
@@ -45,6 +46,7 @@ public class ThreadEnvoi extends Thread {
             prop.put("mail.smtp.host", "smtp.gmail.com");
             System.out.println("Création d'une session mail");
             prop.put("mail.smtp.starttls.enable", "true");
+            prop.put("file.encoding", charset);
             prop.put("mail.smtp.port", "587");
             Session sess = Session.getDefaultInstance(prop, null);
             

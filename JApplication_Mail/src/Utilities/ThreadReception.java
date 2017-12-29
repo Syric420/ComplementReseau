@@ -5,6 +5,7 @@
  */
 package Utilities;
 
+import Class.MessageView;
 import Gui.JApplication_Mail;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -14,6 +15,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,7 +31,7 @@ public class ThreadReception extends Thread{
 
     public ThreadReception(long tempsMili, String user, String mdp, String host, JApplication_Mail gui) {
         this.tempsMili = tempsMili;
-        this.user = user;
+        this.user = "recent:"+user;
         this.mdp = mdp;
         this.gui = gui;
         this.host = host;
@@ -40,11 +42,13 @@ public class ThreadReception extends Thread{
     @Override
     public void run() {
         try {
+            int nbMessages, nbNewMessages;
             Properties prop = System.getProperties();
             
             System.out.println("Création d'une session mail");
             prop.put("mail.store.protocol", "pop3s");
-            prop.put("mail.pop3.host", "pop.gmail.com");     
+            prop.put("mail.pop3.host", "pop.gmail.com");  
+           
             prop.put("mail.pop3.user", user);
             prop.put("mail.pop3.socketFactory", 995);
             prop.put("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -58,7 +62,7 @@ public class ThreadReception extends Thread{
       }
     });
       
-     
+            
 
             //prop.list(System.out);
             String Local = this.getUser();
@@ -68,53 +72,45 @@ public class ThreadReception extends Thread{
             Folder f = st.getFolder("INBOX");
             f.open(Folder.READ_ONLY);
             Message msg[] = f.getMessages();
+            nbMessages = f.getMessageCount();
             
             for (int i=0; i<msg.length; i++)
             {
-                Thread.sleep(10);
-                //System.out.println("Date : " + msg[i].getSentDate());
-                // Récupération du conteneur Multipart
-                /*if(msg[i].isMimeType("multipart/*"))
-                {
-                    Multipart msgMP = (Multipart)msg[i].getContent();
-                    int np = msgMP.getCount();
-                    //System.out.println("-- Nombre de composantes = " + np);
-                    // Scan des BodyPart
-                    for (int j=0; j<np; j++)
-                    {
-                        Part p = ((Multipart)msgMP).getBodyPart(j);
-                        String d = p.getDisposition();
-                        if (p.isMimeType("text/plain"))
-                        {
-                            //gui.dlm.addElement(msg[i]);
-                        }
-                        if (d!=null && d.equalsIgnoreCase(Part.ATTACHMENT))
-                        {
-                            InputStream is = p.getInputStream();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            int c;
-                            while ((c = is.read()) != -1) baos.write(c);
-                            baos.flush();
-                            String nf = p.getFileName();
-                            FileOutputStream fos =new FileOutputStream(nf);
-                            baos.writeTo(fos);
-                            fos.close();
-                        }
-                    } // fin for j
-                    
-                }
-                else if(msg[i].isMimeType("text/*"))
-                {
-                     
-                    
-                    
-                }*/
                 
-                gui.dlm.addElement(msg[i]);
+                 MessageView msgView = new MessageView();
+                 msgView.setMessage(msg[i]);
+                 System.out.println(msgView);
+                //Thread.sleep(2);
+                
+                gui.dlm.addElement(msgView);
+                //Thread.sleep(2);
             }
-            System.out.println("Fin des messages");
             
-            Thread.sleep(this.getTempsMili());
+            System.out.println("Fin de la découverte des messages");
+            //Une fois avoir tout lu, il va surveiller si il y a pas de nouveaux messages toutes les 5 min
+            
+            while(true)
+            {
+                f = st.getFolder("INBOX");
+                f.open(Folder.READ_ONLY);
+                nbNewMessages = f.getMessageCount();
+                
+                System.out.println("Test si nouveau message");
+                if(nbNewMessages > nbMessages)
+                {
+                    //Si il y a un/des nouveaux messages, on boucle pour les ajouter dans la liste (ils sont tjrs ajoutés à la fin)
+                    JOptionPane.showMessageDialog(gui, "Un nouveau message est arrivé");
+                    msg = f.getMessages();
+                    for(int i=nbMessages; i<nbNewMessages;i++)
+                        gui.dlm.addElement(new MessageView(msg[i]));
+                }   
+                else
+                    System.out.println("Pas de nouveau message");
+                
+                nbMessages = nbNewMessages;
+                Thread.sleep(this.getTempsMili());
+                
+            }
         } catch (MessagingException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
         }

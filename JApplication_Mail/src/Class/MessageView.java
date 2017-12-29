@@ -17,10 +17,21 @@ import javax.mail.MessagingException;
 public class MessageView {
     private Message message;
 
+    public MessageView() {
+        message = null;
+    }
+
+    public MessageView(Message message) {
+        this.message = message;
+    }
+
+    
+    
+    
     @Override
     public String toString() {
         try {
-            return message.getFrom().toString() + " : " +message.getSubject();
+            return message.getFrom()[0] + " : " +message.getSubject();
         } catch (MessagingException ex) {
             Logger.getLogger(MessageView.class.getName()).log(Level.SEVERE, null, ex);
         }

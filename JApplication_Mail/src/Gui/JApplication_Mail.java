@@ -5,6 +5,7 @@
  */
 package Gui;
 
+import Class.MessageView;
 import Utilities.ThreadReception;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -138,11 +139,11 @@ public class JApplication_Mail extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel2)
@@ -151,14 +152,15 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel1)
                             .addGap(30, 30, 30)
-                            .addComponent(jTF_From, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(jTF_From, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
@@ -167,10 +169,10 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jTF_Subject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel3)
-                        .addGap(11, 11, 11)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
 
@@ -203,9 +205,13 @@ public class JApplication_Mail extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         if (!evt.getValueIsAdjusting()) {
+            jTF_From.setText("");
+            jTF_Subject.setText("");
+            jTA_Message.setText("");
             try {
                 int i = jList1.getSelectedIndex();
-                Message msg = (Message) dlm.get(i);
+                MessageView msgView = (MessageView) dlm.get(i);
+                Message msg = msgView.getMessage();
                 jTF_From.setText(msg.getFrom()[0].toString());
                 jTF_Subject.setText(msg.getSubject());
                 
@@ -222,8 +228,9 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         {
                             jTA_Message.setText((String)p.getContent());
                         }
-                        if (d!=null && d.equalsIgnoreCase(Part.ATTACHMENT))
+                        if (d!=null && (d.equalsIgnoreCase(Part.ATTACHMENT)))
                         {
+                            System.out.println("Attachment");
                             InputStream is = p.getInputStream();
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             int c;
@@ -233,12 +240,12 @@ public class JApplication_Mail extends javax.swing.JFrame {
                             FileOutputStream fos =new FileOutputStream(nf);
                             baos.writeTo(fos);
                             fos.close();
-                            //System.out.println("Pièce attachée " + nf + " récupérée");
+                            System.out.println("Pièce attachée " + nf + " récupérée");
                         }
                     } // fin for j
                  // fin for i
                 }
-                else if(msg.isMimeType("text/*"))
+                if(msg.isMimeType("text/plain"))
                 {
                      
                     jTA_Message.setText((String)msg.getContent());
@@ -301,7 +308,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    public javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTA_Message;
     private javax.swing.JTextField jTF_From;
     private javax.swing.JTextField jTF_Subject;
