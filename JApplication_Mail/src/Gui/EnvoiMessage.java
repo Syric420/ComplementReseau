@@ -24,10 +24,12 @@ public class EnvoiMessage extends javax.swing.JDialog {
      * Creates new form EnvoiMessage
      */
     JFileChooser fc;
+    private String PieceJointe;
     public EnvoiMessage(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         fc = new JFileChooser();
+        PieceJointe=null;
     }
 
     /**
@@ -156,7 +158,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Veuillez complèter tous les champs");
         else
         {
-            ThreadEnvoi thread = new ThreadEnvoi(((JApplication_Mail)this.getParent()).getUser(), ((JApplication_Mail)this.getParent()).getMdp(), jTF_To.getText(), jTF_Subject.getText(), jTA_Message.getText(), (JApplication_Mail)this.getParent());
+            ThreadEnvoi thread = new ThreadEnvoi(((JApplication_Mail)this.getParent()).getUser(), ((JApplication_Mail)this.getParent()).getMdp(), jTF_To.getText(), jTF_Subject.getText(), jTA_Message.getText(), (JApplication_Mail)this.getParent(), this.getPieceJointe());
             thread.start();
             ClearAllText();
             this.setVisible(false);
@@ -172,12 +174,15 @@ public class EnvoiMessage extends javax.swing.JDialog {
         {
             File file = fc.getSelectedFile();
             jLabel4.setText(file.getName());
+            setPieceJointe(file.getPath());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         
+        jLabel4.setText("");
+        setPieceJointe(null);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -242,5 +247,19 @@ public class EnvoiMessage extends javax.swing.JDialog {
         jTF_To.setText("");
         jTF_Subject.setText("");
         jTA_Message.setText("");
+    }
+
+    /**
+     * @return the PieceJointe
+     */
+    public String getPieceJointe() {
+        return PieceJointe;
+    }
+
+    /**
+     * @param PieceJointe the PieceJointe to set
+     */
+    public void setPieceJointe(String PieceJointe) {
+        this.PieceJointe = PieceJointe;
     }
 }

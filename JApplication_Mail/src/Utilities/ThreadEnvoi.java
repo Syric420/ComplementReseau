@@ -7,12 +7,18 @@ package Utilities;
 
 import Gui.JApplication_Mail;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,16 +31,18 @@ public class ThreadEnvoi extends Thread {
     private String to;
     private String subject;
     private String message;
+    private String pieceJointe;
     private JApplication_Mail gui;
     static String charset = "iso-8859-1";
 
-    public ThreadEnvoi(String user, String mdp, String to, String subject, String message, JApplication_Mail gui) {
+    public ThreadEnvoi(String user, String mdp, String to, String subject, String message, JApplication_Mail gui, String pieceJointe) {
         this.user = user;
         this.mdp = mdp;
         this.to = to;
         this.subject = subject;
         this.message = message;
         this.gui = gui;
+        this.pieceJointe = pieceJointe;
     }
     
 
@@ -63,7 +71,28 @@ public class ThreadEnvoi extends Thread {
                 msg.setFrom (new InternetAddress (exp));
                 msg.setRecipient (Message.RecipientType.TO, new InternetAddress (dest));
                 msg.setSubject(sujet);
-                msg.setText (texte);
+                
+                //Construction de l'objet multipart
+                Multipart msgMP = new MimeMultipart();
+                
+                //Composante texte
+                MimeBodyPart msgBP = new MimeBodyPart();
+                msgBP.setText(texte);
+                msgMP.addBodyPart(msgBP);
+                
+                //2éme composante : Le fichier joint
+                if(this.getPieceJointe()!=null)
+                {
+                    msgBP = new MimeBodyPart();
+                    String nf = getPieceJointe();
+                    DataSource so = new FileDataSource (nf);
+                    msgBP.setDataHandler (new DataHandler (so));
+                    msgBP.setFileName(nf);
+                    msgMP.addBodyPart(msgBP);
+                }
+                
+                //On met l'objet multipart dans le message
+                msg.setContent(msgMP);
                 System.out.println("Envoi du message");
                 Transport.send(msg, exp, mdp);
                 System.out.println("Message envoyé");
@@ -149,6 +178,20 @@ public class ThreadEnvoi extends Thread {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    /**
+     * @return the pieceJointe
+     */
+    public String getPieceJointe() {
+        return pieceJointe;
+    }
+
+    /**
+     * @param pieceJointe the pieceJointe to set
+     */
+    public void setPieceJointe(String pieceJointe) {
+        this.pieceJointe = pieceJointe;
     }
     
     

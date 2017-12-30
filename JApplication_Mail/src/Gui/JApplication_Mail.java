@@ -11,14 +11,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -29,6 +33,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
     public DefaultListModel dlm = new DefaultListModel();
     private String user, mdp;
     private EnvoiMessage guiEnvoiMessage;
+    private getHeaders guiHeaders;
     private Login log;
     private ThreadReception threadRecep;
     
@@ -39,6 +44,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
         initComponents();
         log = new Login(this, true);
         guiEnvoiMessage = new EnvoiMessage(this, true);
+        guiHeaders = new getHeaders(this, true);
         log.setVisible(true);
         threadRecep = new ThreadReception(300000, this.getUser(), this.getMdp(), "pop-mail.outlook.com", this);
         threadRecep.start();
@@ -53,8 +59,6 @@ public class JApplication_Mail extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTA_Message = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -62,6 +66,8 @@ public class JApplication_Mail extends javax.swing.JFrame {
         jTF_Subject = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTA_Message = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -71,10 +77,6 @@ public class JApplication_Mail extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTA_Message.setColumns(20);
-        jTA_Message.setRows(5);
-        jScrollPane1.setViewportView(jTA_Message);
 
         jLabel1.setText("From:");
 
@@ -91,6 +93,8 @@ public class JApplication_Mail extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList1);
 
+        jScrollPane3.setViewportView(jTA_Message);
+
         jMenu1.setText("File");
 
         jMenuItem2.setText("Envoyer message");
@@ -101,7 +105,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem4.setText("Se déconnecter");
+        jMenuItem4.setText("Tracer message");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -143,7 +147,6 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel2)
@@ -152,7 +155,8 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel1)
                             .addGap(30, 30, 30)
-                            .addComponent(jTF_From, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTF_From, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -172,7 +176,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jScrollPane3)))
                 .addContainerGap())
         );
 
@@ -191,14 +195,30 @@ public class JApplication_Mail extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:    
         getGuiEnvoiMessage().setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-        getLog().clearAllText();
-        getLog().setVisible(true);
+        try {
+            // TODO add your handling code here:
+            guiHeaders.jTA_Headers.setText("");
+            int i = jList1.getSelectedIndex();
+            MessageView msgView = (MessageView) dlm.get(i);
+            Message msg = msgView.getMessage();
+            Enumeration e = msg.getAllHeaders();
+            Header h = (Header)e.nextElement();
+            while (e.hasMoreElements())
+            {
+                //System.out.println(h.getName() + " --> " + h.getValue());
+                guiHeaders.jTA_Headers.append(h.getValue());
+                guiHeaders.jTA_Headers.append("\n\n");
+                h = (Header)e.nextElement();
+            }
+            guiHeaders.setVisible(true);
+        } catch (MessagingException ex) {
+            Logger.getLogger(JApplication_Mail.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
@@ -231,23 +251,25 @@ public class JApplication_Mail extends javax.swing.JFrame {
                         if (d!=null && (d.equalsIgnoreCase(Part.ATTACHMENT)))
                         {
                             System.out.println("Attachment");
+                            
                             InputStream is = p.getInputStream();
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             int c;
                             while ((c = is.read()) != -1) baos.write(c);
                             baos.flush();
                             String nf = p.getFileName();
+                            
                             FileOutputStream fos =new FileOutputStream(nf);
                             baos.writeTo(fos);
+                            
                             fos.close();
                             System.out.println("Pièce attachée " + nf + " récupérée");
                         }
                     } // fin for j
                  // fin for i
                 }
-                if(msg.isMimeType("text/plain"))
+                if(msg.isMimeType("text/*"))
                 {
-                     
                     jTA_Message.setText((String)msg.getContent());
                 }
                 //jTA_Message.setText((String)msg.getContent());
@@ -307,9 +329,9 @@ public class JApplication_Mail extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTA_Message;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextPane jTA_Message;
     private javax.swing.JTextField jTF_From;
     private javax.swing.JTextField jTF_Subject;
     // End of variables declaration//GEN-END:variables

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.*;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -73,16 +74,20 @@ public class ThreadReception extends Thread{
             f.open(Folder.READ_ONLY);
             Message msg[] = f.getMessages();
             nbMessages = f.getMessageCount();
+            System.out.println(nbMessages);
+             if(SwingUtilities.isEventDispatchThread()) {
+            System.out.println("updating list from Event Dispatch Thread");
+            }else {
+                System.out.println("updating list NOT from Event Dispatch Thread");
+            }
             
             for (int i=0; i<msg.length; i++)
             {
+                MessageView msgView = new MessageView(msg[i]);
+                 
+                //System.out.println(msgView);
+                gui.dlm.add(0,msgView);
                 
-                 MessageView msgView = new MessageView();
-                 msgView.setMessage(msg[i]);
-                 System.out.println(msgView);
-                //Thread.sleep(2);
-                
-                gui.dlm.addElement(msgView);
                 //Thread.sleep(2);
             }
             
@@ -91,6 +96,8 @@ public class ThreadReception extends Thread{
             
             while(true)
             {
+                Thread.sleep(5000);
+                //Thread.sleep(this.getTempsMili());
                 f = st.getFolder("INBOX");
                 f.open(Folder.READ_ONLY);
                 nbNewMessages = f.getMessageCount();
@@ -102,13 +109,13 @@ public class ThreadReception extends Thread{
                     JOptionPane.showMessageDialog(gui, "Un nouveau message est arrivé");
                     msg = f.getMessages();
                     for(int i=nbMessages; i<nbNewMessages;i++)
-                        gui.dlm.addElement(new MessageView(msg[i]));
+                        gui.dlm.add(0, new MessageView(msg[i]));
                 }   
                 else
                     System.out.println("Pas de nouveau message");
                 
                 nbMessages = nbNewMessages;
-                Thread.sleep(this.getTempsMili());
+                
                 
             }
         } catch (MessagingException ex) {
