@@ -94,6 +94,7 @@ public class ThreadEnvoi extends Thread {
                 //On met l'objet multipart dans le message
                 msg.setContent(msgMP);
                 System.out.println("Envoi du message");
+                //On l'envoie
                 Transport.send(msg, exp, mdp);
                 System.out.println("Message envoyé");
             }

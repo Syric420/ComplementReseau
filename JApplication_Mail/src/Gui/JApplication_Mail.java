@@ -204,18 +204,23 @@ public class JApplication_Mail extends javax.swing.JFrame {
             // TODO add your handling code here:
             guiHeaders.jTA_Headers.setText("");
             int i = jList1.getSelectedIndex();
-            MessageView msgView = (MessageView) dlm.get(i);
-            Message msg = msgView.getMessage();
-            Enumeration e = msg.getAllHeaders();
-            Header h = (Header)e.nextElement();
-            while (e.hasMoreElements())
+            if(i!=-1)
             {
-                //System.out.println(h.getName() + " --> " + h.getValue());
-                guiHeaders.jTA_Headers.append(h.getValue());
-                guiHeaders.jTA_Headers.append("\n\n");
-                h = (Header)e.nextElement();
+                MessageView msgView = (MessageView) dlm.get(i);
+                Message msg = msgView.getMessage();
+                Enumeration e = msg.getAllHeaders();
+                Header h = (Header)e.nextElement();
+                while (e.hasMoreElements())
+                {
+                    //System.out.println(h.getName() + " --> " + h.getValue());
+                    guiHeaders.jTA_Headers.append(h.getValue());
+                    guiHeaders.jTA_Headers.append("\n\n");
+                    h = (Header)e.nextElement();
+                }
+                guiHeaders.setVisible(true);
             }
-            guiHeaders.setVisible(true);
+            else
+                JOptionPane.showMessageDialog(this, "Erreur - Pas de message selectionné");
         } catch (MessagingException ex) {
             Logger.getLogger(JApplication_Mail.class.getName()).log(Level.SEVERE, null, ex);
         }

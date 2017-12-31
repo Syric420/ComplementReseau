@@ -85,7 +85,7 @@ public class ThreadReception extends Thread{
             {
                 MessageView msgView = new MessageView(msg[i]);
                  
-                //System.out.println(msgView);
+                System.out.println(msgView);
                 gui.dlm.add(0,msgView);
                 
                 //Thread.sleep(2);

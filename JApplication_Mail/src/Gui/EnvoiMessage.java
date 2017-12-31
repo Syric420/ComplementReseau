@@ -7,11 +7,14 @@ package Gui;
 
 import Utilities.ThreadEnvoi;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.activation.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
 /**
