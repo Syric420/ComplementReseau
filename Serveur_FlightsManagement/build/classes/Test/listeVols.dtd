@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/vols_prevus_poubelle-air_000214.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE listeVols SYSTEM "vols_prevus_poubelle-air_000214.dtd">
+
+    <listeVols>
+    ...
+    </listeVols>
+-->
+
+<!ELEMENT listeVols (compagnie|createDestination|createFlights)*>
+
+<!ELEMENT compagnie (nom|pays)*>
+<!ATTLIST compagnie
+    lowcost CDATA #IMPLIED
+  >
+
+<!ELEMENT nom (#PCDATA)>
+
+<!ELEMENT pays (#PCDATA)>
+
+<!ELEMENT createDestination (ville|pays)*>
+
+<!ELEMENT ville (#PCDATA)>
+<!ATTLIST ville
+    zoneFranche CDATA #IMPLIED
+  >
+<!ELEMENT createFlights (vol)*>
+<!ATTLIST createFlights
+    destination CDATA #IMPLIED
+    country CDATA #IMPLIED
+  >
+<!ELEMENT vol (date|time|prix)*>
+<!ELEMENT date (#PCDATA)>
+<!ELEMENT time (#PCDATA)>
+<!ELEMENT prix (#PCDATA)>

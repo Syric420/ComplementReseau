@@ -1,0 +1,18 @@
+<?xml encoding="UTF-8" ?>
+
+<!ELEMENT listeVols ANY>
+<!ELEMENT societe (nomSociété, adresse, contact, numéroEnregistrement)>
+<!ELEMENT nomSociété (#PCDATA)>
+<!ELEMENT adresse (rue, numéro, codePostal, ville)>
+<!ELEMENT rue (#PCDATA)>
+<!ELEMENT numéro (#PCDATA)>
+<!ELEMENT codePostal (#PCDATA)>
+<!ELEMENT ville (#PCDATA)>
+<!ELEMENT contact (nom, prénom, fonction, (telephone | email*) )>
+<!ELEMENT nom (#PCDATA)>
+<!ELEMENT prénom (#PCDATA)>
+<!ELEMENT fonction (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
+<!ELEMENT telephone (#PCDATA)>
+<!ELEMENT numéroEnregistrement (#PCDATA)>
+<!ATTLIST numéroEnregistrement ONSS ID #REQUIRED interne CDATA #IMPLIED>
