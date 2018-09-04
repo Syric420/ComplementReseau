@@ -29,6 +29,11 @@ public class ThreadReception extends Thread{
     private String mdp;
     private String host;
     private JApplication_Mail gui;
+    private int nbMessagesCharges;
+    private Store st;
+    private Folder f;
+    private Message msg[];
+    
 
     public ThreadReception(long tempsMili, String user, String mdp, String host, JApplication_Mail gui) {
         this.tempsMili = tempsMili;
@@ -36,6 +41,7 @@ public class ThreadReception extends Thread{
         this.mdp = mdp;
         this.gui = gui;
         this.host = host;
+        this.nbMessagesCharges=0;
     }
     
     
@@ -68,26 +74,18 @@ public class ThreadReception extends Thread{
             //prop.list(System.out);
             String Local = this.getUser();
             String pwd = this.getMdp();
-            Store st = session.getStore("pop3");
+            st = session.getStore("pop3");
             st.connect(Local, pwd);
-            Folder f = st.getFolder("INBOX");
+            f = st.getFolder("INBOX");
             f.open(Folder.READ_ONLY);
-            Message msg[] = f.getMessages();
+            msg = f.getMessages();
             nbMessages = f.getMessageCount();
             System.out.println(nbMessages);
-             if(SwingUtilities.isEventDispatchThread()) {
-            System.out.println("updating list from Event Dispatch Thread");
-            }else {
-                System.out.println("updating list NOT from Event Dispatch Thread");
-            }
             
-            for (int i=0; i<msg.length; i++)
+            for (nbMessagesCharges=0; nbMessagesCharges<10; nbMessagesCharges++)
             {
-                MessageView msgView = new MessageView(msg[i]);
-                 
-                System.out.println(msgView);
+                MessageView msgView = new MessageView(msg[nbMessagesCharges]);
                 gui.dlm.add(0,msgView);
-                
                 //Thread.sleep(2);
             }
             
@@ -123,6 +121,15 @@ public class ThreadReception extends Thread{
         }
         catch (InterruptedException ex) {
             Logger.getLogger(ThreadReception.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void chargePlusMessages()
+    {
+        for(int i =nbMessagesCharges+10; i>nbMessagesCharges; nbMessagesCharges++)
+        {
+            MessageView msgView = new MessageView(msg[nbMessagesCharges]);
+            gui.dlm.add(0,msgView);
         }
     }
 

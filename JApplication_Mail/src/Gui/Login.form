@@ -80,7 +80,7 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="jTF_mdp">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Tp-link1"/>
+        <Property name="text" type="java.lang.String" value="Tp-link123"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTF_Email">
