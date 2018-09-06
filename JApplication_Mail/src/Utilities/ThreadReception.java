@@ -30,6 +30,7 @@ public class ThreadReception extends Thread{
     private String host;
     private JApplication_Mail gui;
     private int nbMessagesCharges;
+    private int nbMessages;
     private Store st;
     private Folder f;
     private Message msg[];
@@ -42,6 +43,7 @@ public class ThreadReception extends Thread{
         this.gui = gui;
         this.host = host;
         this.nbMessagesCharges=0;
+        this.nbMessages=0;
     }
     
     
@@ -49,7 +51,7 @@ public class ThreadReception extends Thread{
     @Override
     public void run() {
         try {
-            int nbMessages, nbNewMessages;
+            int nbNewMessages;
             Properties prop = System.getProperties();
             
             System.out.println("Création d'une session mail");
@@ -82,7 +84,7 @@ public class ThreadReception extends Thread{
             nbMessages = f.getMessageCount();
             System.out.println(nbMessages);
             
-            for (nbMessagesCharges=0; nbMessagesCharges<10; nbMessagesCharges++)
+            for (nbMessagesCharges=0; nbMessagesCharges<10 && nbMessagesCharges<nbMessages; nbMessagesCharges++)
             {
                 MessageView msgView = new MessageView(msg[nbMessagesCharges]);
                 gui.dlm.add(0,msgView);
@@ -100,7 +102,7 @@ public class ThreadReception extends Thread{
                 f.open(Folder.READ_ONLY);
                 nbNewMessages = f.getMessageCount();
                 
-                System.out.println("Test si nouveau message");
+                //System.out.println("Test si nouveau message");
                 if(nbNewMessages > nbMessages)
                 {
                     //Si il y a un/des nouveaux messages, on boucle pour les ajouter dans la liste (ils sont tjrs ajoutés à la fin)
@@ -108,11 +110,11 @@ public class ThreadReception extends Thread{
                     msg = f.getMessages();
                     for(int i=nbMessages; i<nbNewMessages;i++)
                         gui.dlm.add(0, new MessageView(msg[i]));
+                    
+                    nbMessages = nbNewMessages;
                 }   
-                else
-                    System.out.println("Pas de nouveau message");
                 
-                nbMessages = nbNewMessages;
+                
                 
                 
             }
@@ -126,7 +128,7 @@ public class ThreadReception extends Thread{
     
     public void chargePlusMessages()
     {
-        for(int i =nbMessagesCharges+10; i>nbMessagesCharges; nbMessagesCharges++)
+        for(int i =nbMessagesCharges+10; i>nbMessagesCharges && nbMessagesCharges<nbMessages; nbMessagesCharges++)
         {
             MessageView msgView = new MessageView(msg[nbMessagesCharges]);
             gui.dlm.add(0,msgView);
@@ -190,14 +192,14 @@ public class ThreadReception extends Thread{
     }
 
     /**
-     * @return the gui
+     * @return the guiPieceAttachee
      */
     public JApplication_Mail getGui() {
         return gui;
     }
 
     /**
-     * @param gui the gui to set
+     * @param gui the guiPieceAttachee to set
      */
     public void setGui(JApplication_Mail gui) {
         this.gui = gui;

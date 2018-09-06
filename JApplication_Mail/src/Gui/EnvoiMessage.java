@@ -5,9 +5,12 @@
  */
 package Gui;
 
+import Class.PieceAttachee;
 import Utilities.ThreadEnvoi;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JOptionPane;
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -27,12 +30,13 @@ public class EnvoiMessage extends javax.swing.JDialog {
      * Creates new form EnvoiMessage
      */
     JFileChooser fc;
-    private String PieceJointe;
+    Vector<PieceAttachee> vecPieceAttachees;
     public EnvoiMessage(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         fc = new JFileChooser();
-        PieceJointe=null;
+        vecPieceAttachees = new Vector();
+        
     }
 
     /**
@@ -55,6 +59,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Envoie message");
@@ -63,12 +68,17 @@ public class EnvoiMessage extends javax.swing.JDialog {
 
         jLabel1.setText("To:");
 
+        jTF_To.setText("vincelempirette@gmail.com");
+
         jLabel2.setText("Subject:");
+
+        jTF_Subject.setText("Test");
 
         jLabel3.setText("Message:");
 
         jTA_Message.setColumns(20);
         jTA_Message.setRows(5);
+        jTA_Message.setText("hey");
         jScrollPane1.setViewportView(jTA_Message);
 
         jButton1.setText("Envoyer");
@@ -78,19 +88,24 @@ public class EnvoiMessage extends javax.swing.JDialog {
             }
         });
 
-        jButton2.setText("Ajouter pièce attachée");
+        jButton2.setText("Ajouter image");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Pas de pièce attachée");
-
-        jButton3.setText("Enlever pièce attachée");
+        jButton3.setText("Ajouter digest");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Ajouter objet sérialisé ");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -105,7 +120,9 @@ public class EnvoiMessage extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -117,13 +134,14 @@ public class EnvoiMessage extends javax.swing.JDialog {
                                     .addComponent(jTF_To)
                                     .addComponent(jTF_Subject, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)))
                             .addComponent(jLabel3)
+                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3))
-                            .addComponent(jLabel4))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,10 +161,11 @@ public class EnvoiMessage extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -161,7 +180,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Veuillez complèter tous les champs");
         else
         {
-            ThreadEnvoi thread = new ThreadEnvoi(((JApplication_Mail)this.getParent()).getUser(), ((JApplication_Mail)this.getParent()).getMdp(), jTF_To.getText(), jTF_Subject.getText(), jTA_Message.getText(), (JApplication_Mail)this.getParent(), this.getPieceJointe());
+            ThreadEnvoi thread = new ThreadEnvoi(((JApplication_Mail)this.getParent()).getUser(), ((JApplication_Mail)this.getParent()).getMdp(), jTF_To.getText(), jTF_Subject.getText(), jTA_Message.getText(), (JApplication_Mail)this.getParent(), vecPieceAttachees);
             thread.start();
             ClearAllText();
             this.setVisible(false);
@@ -170,23 +189,42 @@ public class EnvoiMessage extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
+
         int ret = fc.showOpenDialog(this);
         
         if(ret == JFileChooser.APPROVE_OPTION)
         {
             File file = fc.getSelectedFile();
-            jLabel4.setText(file.getName());
-            setPieceJointe(file.getPath());
+            PieceAttachee image = new PieceAttachee(PieceAttachee.IMAGE, file.getPath(), file.getName() );
+            this.vecPieceAttachees.add(image);
+            jLabel4.setText(jLabel4.getText()+";"+file.getName());
+            //setPieceJointe(file.getPath());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        try {
+            //Ajout du digest sur le texte
+            
+            String text = jTA_Message.getText();
+            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            
+            md.update(text.getBytes());
+            byte[] digest = md.digest();
+            
+            //PieceAttachee digest = new PieceAttachee(PieceAttachee.DIGEST, )
+            
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(EnvoiMessage.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (java.security.NoSuchProviderException ex) {
+            Logger.getLogger(EnvoiMessage.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        jLabel4.setText("");
-        setPieceJointe(null);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -236,6 +274,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -250,19 +289,15 @@ public class EnvoiMessage extends javax.swing.JDialog {
         jTF_To.setText("");
         jTF_Subject.setText("");
         jTA_Message.setText("");
+        vecPieceAttachees.clear();
     }
-
-    /**
-     * @return the PieceJointe
-     */
-    public String getPieceJointe() {
-        return PieceJointe;
+    
+    private String getFileExtension(File file) {
+    String name = file.getName();
+    int lastIndexOf = name.lastIndexOf(".");
+    if (lastIndexOf == -1) {
+        return "";
     }
-
-    /**
-     * @param PieceJointe the PieceJointe to set
-     */
-    public void setPieceJointe(String PieceJointe) {
-        this.PieceJointe = PieceJointe;
-    }
+    return name.substring(lastIndexOf);
+}
 }

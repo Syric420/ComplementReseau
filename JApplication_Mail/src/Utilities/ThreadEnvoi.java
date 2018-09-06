@@ -5,8 +5,10 @@
  */
 package Utilities;
 
+import Class.PieceAttachee;
 import Gui.JApplication_Mail;
 import java.util.Properties;
+import java.util.Vector;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -31,18 +33,19 @@ public class ThreadEnvoi extends Thread {
     private String to;
     private String subject;
     private String message;
-    private String pieceJointe;
+    private Vector<PieceAttachee> vecPa;
     private JApplication_Mail gui;
     static String charset = "iso-8859-1";
 
-    public ThreadEnvoi(String user, String mdp, String to, String subject, String message, JApplication_Mail gui, String pieceJointe) {
+    public ThreadEnvoi(String user, String mdp, String to, String subject, String message, JApplication_Mail gui, Vector vecPieceAttachees) {
         this.user = user;
         this.mdp = mdp;
         this.to = to;
         this.subject = subject;
         this.message = message;
         this.gui = gui;
-        this.pieceJointe = pieceJointe;
+        this.vecPa = new Vector(vecPieceAttachees);
+        System.out.println(vecPa);
     }
     
 
@@ -67,6 +70,7 @@ public class ThreadEnvoi extends Thread {
                 String dest = this.getTo();
                 String sujet = this.getSubject();
                 String texte = this.getMessage();
+                
                 MimeMessage msg = new MimeMessage (sess);
                 msg.setFrom (new InternetAddress (exp));
                 msg.setRecipient (Message.RecipientType.TO, new InternetAddress (dest));
@@ -81,14 +85,27 @@ public class ThreadEnvoi extends Thread {
                 msgMP.addBodyPart(msgBP);
                 
                 //2éme composante : Le fichier joint
-                if(this.getPieceJointe()!=null)
+                if(!vecPa.isEmpty())
                 {
-                    msgBP = new MimeBodyPart();
+                    System.out.println("Ajout des attachements");
+                    /*msgBP = new MimeBodyPart();
                     String nf = getPieceJointe();
                     DataSource so = new FileDataSource (nf);
                     msgBP.setDataHandler (new DataHandler (so));
-                    msgBP.setFileName(nf);
-                    msgMP.addBodyPart(msgBP);
+                    msgBP.setFileName(nf);*/
+                    int i=0;
+                    System.out.println("NB Attachements = "+vecPa.size());
+                    while(i<vecPa.size())
+                    {
+                        msgBP = vecPa.get(i).createMsgBodyPartImage();
+                        if(msgBP==null)
+                        {
+                            System.err.println("Erreur de création de message Mime Body Part");
+                            System.exit(0);
+                        }
+                        msgMP.addBodyPart(msgBP);
+                        i++;
+                    }
                 }
                 
                 //On met l'objet multipart dans le message
@@ -180,20 +197,5 @@ public class ThreadEnvoi extends Thread {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    /**
-     * @return the pieceJointe
-     */
-    public String getPieceJointe() {
-        return pieceJointe;
-    }
-
-    /**
-     * @param pieceJointe the pieceJointe to set
-     */
-    public void setPieceJointe(String pieceJointe) {
-        this.pieceJointe = pieceJointe;
-    }
-    
-    
+     
 }
