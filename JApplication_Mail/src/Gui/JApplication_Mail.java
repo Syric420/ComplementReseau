@@ -22,7 +22,6 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -36,6 +35,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
     private getHeaders guiHeaders;
     private Login log;
     private ThreadReception threadRecep;
+    GuiPieceAttachee guiPieceAttachee = new GuiPieceAttachee(this, true);
     
     /**
      * Creates new form JApplication_Mail
@@ -233,7 +233,6 @@ public class JApplication_Mail extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         try {
-            // TODO add your handling code here:
             guiHeaders.jTA_Headers.setText("");
             int i = jList1.getSelectedIndex();
             if(i!=-1)
@@ -324,7 +323,13 @@ public class JApplication_Mail extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        guiPieceAttachee.setVisible(true);
+        int i = jList1.getSelectedIndex();
+        if(i!=-1)
+        {
+            MessageView msgView = (MessageView) dlm.get(i);
+            guiPieceAttachee.setMessage(msgView.getMessage());
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
