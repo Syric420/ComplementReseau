@@ -7,6 +7,7 @@ package Utilities;
 
 import Class.PieceAttachee;
 import Gui.JApplication_Mail;
+import java.util.Base64;
 import java.util.Properties;
 import java.util.Vector;
 import javax.activation.DataHandler;
@@ -22,6 +23,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
+import static org.bouncycastle.asn1.cms.CMSObjectIdentifiers.data;
 
 /**
  *
@@ -87,30 +89,36 @@ public class ThreadEnvoi extends Thread {
                 //2éme composante : Le fichier joint
                 if(!vecPa.isEmpty())
                 {
-                    System.out.println("Ajout des attachements");
-                    /*msgBP = new MimeBodyPart();
-                    String nf = getPieceJointe();
-                    DataSource so = new FileDataSource (nf);
-                    msgBP.setDataHandler (new DataHandler (so));
-                    msgBP.setFileName(nf);*/
                     int i=0;
-                    System.out.println("NB Attachements = "+vecPa.size());
                     while(i<vecPa.size())
                     {
-                        msgBP = vecPa.get(i).createMsgBodyPartImage();
-                        if(msgBP==null)
+                        switch(vecPa.get(i).getType())
                         {
-                            System.err.println("Erreur de création de message Mime Body Part");
-                            System.exit(0);
+                            case PieceAttachee.IMAGE :
+                                msgBP = vecPa.get(i).createMsgBodyPartImage();
+                                if(msgBP==null)
+                                {
+                                    System.err.println("Erreur de création de message Mime Body Part");
+                                    System.exit(0);
+                                }
+                                msgMP.addBodyPart(msgBP);
+                                break;
+                            case PieceAttachee.DIGEST :
+                                msgBP =(MimeBodyPart) msgMP.getBodyPart(0);
+                                String digest = vecPa.get(i).createDigest();
+                                msgBP.setContentMD5(digest);
+                                break;
+                            case PieceAttachee.PIECE_ATTACHEE :
+                                break;
                         }
-                        msgMP.addBodyPart(msgBP);
+                        
                         i++;
                     }
                 }
                 
                 //On met l'objet multipart dans le message
                 msg.setContent(msgMP);
-                System.out.println("Envoi du message");
+                //System.out.println("Envoi du message");
                 //On l'envoie
                 Transport.send(msg, exp, mdp);
                 System.out.println("Message envoyé");

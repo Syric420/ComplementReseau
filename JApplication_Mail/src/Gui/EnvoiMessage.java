@@ -59,7 +59,6 @@ public class EnvoiMessage extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Envoie message");
@@ -102,13 +101,6 @@ public class EnvoiMessage extends javax.swing.JDialog {
             }
         });
 
-        jButton4.setText("Ajouter objet sérialisé ");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -138,10 +130,8 @@ public class EnvoiMessage extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(jButton3)))
+                        .addGap(0, 181, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,8 +151,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
@@ -203,28 +192,12 @@ public class EnvoiMessage extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            //Ajout du digest sur le texte
-            
-            String text = jTA_Message.getText();
-            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
-            
-            md.update(text.getBytes());
-            byte[] digest = md.digest();
-            
-            //PieceAttachee digest = new PieceAttachee(PieceAttachee.DIGEST, )
-            
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(EnvoiMessage.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (java.security.NoSuchProviderException ex) {
-            Logger.getLogger(EnvoiMessage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        //Ajout du digest sur le texte
+        String text = jTA_Message.getText();
+        PieceAttachee digest = new PieceAttachee(PieceAttachee.DIGEST, text );
+        this.vecPieceAttachees.add(digest);
+        JOptionPane.showMessageDialog(this, "Digest ajouté");
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
-    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -274,7 +247,6 @@ public class EnvoiMessage extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

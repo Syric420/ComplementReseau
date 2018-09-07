@@ -270,7 +270,6 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 Message msg = msgView.getMessage();
                 jTF_From.setText(msg.getFrom()[0].toString());
                 jTF_Subject.setText(msg.getSubject());
-                
                 if(msg.isMimeType("multipart/*"))
                 {
                     Multipart msgMP = (Multipart)msg.getContent();
@@ -279,28 +278,11 @@ public class JApplication_Mail extends javax.swing.JFrame {
                     for (int j=0; j<np; j++)
                     {
                         Part p = ((Multipart)msgMP).getBodyPart(j);
-                        String d = p.getDisposition();
+                        
                         if (p.isMimeType("text/plain"))
                         {
                             jTA_Message.setText((String)p.getContent());
-                        }
-                        if (d!=null && (d.equalsIgnoreCase(Part.ATTACHMENT)))
-                        {
-                            System.out.println("Attachment");
-                            
-                            InputStream is = p.getInputStream();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            int c;
-                            while ((c = is.read()) != -1) baos.write(c);
-                            baos.flush();
-                            String nf = p.getFileName();
-                            
-                            FileOutputStream fos =new FileOutputStream(nf);
-                            baos.writeTo(fos);
-                            
-                            fos.close();
-                            System.out.println("Pièce attachée " + nf + " récupérée");
-                        }
+                        }   
                     } // fin for j
                  // fin for i
                 }
@@ -308,6 +290,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 {
                     jTA_Message.setText((String)msg.getContent());
                 }
+                
                 //jTA_Message.setText((String)msg.getContent());
                 } catch (MessagingException ex) {
                     Logger.getLogger(JApplication_Mail.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,13 +306,14 @@ public class JApplication_Mail extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        guiPieceAttachee.setVisible(true);
+
         int i = jList1.getSelectedIndex();
         if(i!=-1)
         {
             MessageView msgView = (MessageView) dlm.get(i);
             guiPieceAttachee.setMessage(msgView.getMessage());
         }
+        guiPieceAttachee.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
