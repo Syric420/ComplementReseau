@@ -5,13 +5,33 @@
  */
 package Gui;
 
+import Class.PieceAttachee;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimePart;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
  * @author Vince
  */
+
 public class GuiPieceAttachee extends javax.swing.JDialog {
+    DefaultListModel dlm = new DefaultListModel();
+    JFileChooser fc;
     private Message message;
     /**
      * Creates new form GuiPieceAttachee
@@ -19,9 +39,56 @@ public class GuiPieceAttachee extends javax.swing.JDialog {
     public GuiPieceAttachee(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        fc = new JFileChooser();
     }
     public void setMessage(Message message) {
-        this.message=message;
+        try {
+            this.message=message;
+            
+            if(this.message.isMimeType("multipart/*"))
+            {
+                Multipart msgMP = (Multipart)this.message.getContent();
+                
+                int np = msgMP.getCount();
+                //System.out.println("nombre de parts = "+np);
+                // Scan des BodyPart
+                for (int j=0; j<np; j++)
+                {
+                    Part p = ((Multipart)msgMP).getBodyPart(j);
+                    String d = p.getDisposition();
+                    if (p.isMimeType("text/plain"))
+                    {
+                       //System.out.println("MP : Text/plain");
+                       String md5 = ((MimePart)p).getContentMD5();
+                        //MimeBodyPart bp = (MimeBodyPart) p.getContent();
+                        //String md5 = bp.getContentMD5();
+                        if(md5!=null)
+                            jTextField1.setText(md5);
+                    }
+                    if (d!=null && (d.equalsIgnoreCase(Part.ATTACHMENT)))
+                    {
+                        InputStream is = p.getInputStream();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        int c;
+                        while ((c = is.read()) != -1) baos.write(c);
+                        baos.flush();
+                        String nf = p.getFileName();
+                        PieceAttachee pa = new PieceAttachee(PieceAttachee.IMAGE, baos, nf);
+                        dlm.addElement(pa);
+                    }
+                } // fin for j
+            }// fin for i
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Pas de pièces attachées pour ce message");
+                this.setVisible(false);
+            }
+        } catch (MessagingException ex) {
+            Logger.getLogger(GuiPieceAttachee.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GuiPieceAttachee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }   
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,21 +99,96 @@ public class GuiPieceAttachee extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Pièces attachées");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        jLabel1.setText("Digest :");
+
+        jTextField1.setEditable(false);
+
+        jList1.setModel(dlm);
+        jScrollPane1.setViewportView(jList1);
+
+        jLabel2.setText("Liste des pièces attachées :");
+
+        jButton1.setText("Download");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(jButton1)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        int i = jList1.getSelectedIndex();
+        PieceAttachee pa = (PieceAttachee) dlm.get(i);
+        
+        //UIManager.put("FileChooser.fileNameLabelText",  pa.getFileName());
+        int ret = fc.showSaveDialog(this);
+        if(ret == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fc.getSelectedFile();
+            pa.download(file.getPath());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        //System.out.println("Clear");
+        dlm.clear();
+        jList1.updateUI();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -82,7 +224,7 @@ public class GuiPieceAttachee extends javax.swing.JDialog {
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
-                        dialog.dispose();
+                        dialog.setVisible(false);
                     }
                 });
                 dialog.setVisible(true);
@@ -91,5 +233,11 @@ public class GuiPieceAttachee extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
