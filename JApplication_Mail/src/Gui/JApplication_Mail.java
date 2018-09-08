@@ -244,8 +244,19 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 while (e.hasMoreElements())
                 {
                     //System.out.println(h.getName() + " --> " + h.getValue());
-                    guiHeaders.jTA_Headers.append(h.getValue());
-                    guiHeaders.jTA_Headers.append("\n\n");
+                    String name = h.getName();
+                    String value = h.getValue();
+                    if(value.length()>0 && name.equalsIgnoreCase("Received"))
+                    {
+                        if(!lookForBy(value).equalsIgnoreCase("NULL"))
+                            guiHeaders.jTA_Headers.append("By : "+lookForBy(value)+"\n");
+                        if(!lookForFrom(value).equalsIgnoreCase("NULL"))
+                            guiHeaders.jTA_Headers.append("From : "+lookForFrom(value)+"\n");
+                        guiHeaders.jTA_Headers.append("\n");
+                        
+                    }
+                    //guiHeaders.jTA_Headers.append();
+                    
                     h = (Header)e.nextElement();
                 }
                 guiHeaders.setVisible(true);
@@ -257,6 +268,53 @@ public class JApplication_Mail extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    public String lookForBy(String s)
+    {
+        String ret = "NULL";
+        int debut, fin;
+        for(int i=0;i<s.length()-1;i++)
+        {
+            if(s.charAt(i)=='b' && s.charAt(i+1)=='y')
+            {
+                
+                debut = i+3;
+                //System.out.println("Début = "+debut);
+                // On récupère la partie après l'espace
+                while(i+3<s.length() && s.charAt(i+3)!=' ')
+                {
+                    i++;
+                }
+                fin = i+3;
+                //System.out.println("Fin = "+fin);
+                ret = s.substring(debut, fin);
+            }
+            
+        }
+        
+        return ret;
+    }
+    
+    public String lookForFrom(String s)
+    {
+        String ret = "NULL";
+        int debut, fin;
+        for(int i=0;i<s.length()-4;i++)
+        {
+            if(s.charAt(i)=='f' && s.charAt(i+1)=='r' && s.charAt(i+2)=='o' && s.charAt(i+3)=='m')
+            {
+                // On récupère la partie après l'espace
+                debut = i+5;
+                while(i+5<s.length() && s.charAt(i+5)!=' ')
+                {
+                    i++;
+                }
+                fin = i+5;
+                //ystem.out.println("Fin = "+fin);
+                ret = s.substring(debut, fin);
+            }      
+        }
+        return ret;
+    }
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         // TODO add your handling code here:
         
