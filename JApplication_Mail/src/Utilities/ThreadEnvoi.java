@@ -108,8 +108,6 @@ public class ThreadEnvoi extends Thread {
                                 String digest = vecPa.get(i).createDigest();
                                 msgBP.setContentMD5(digest);
                                 break;
-                            case PieceAttachee.PIECE_ATTACHEE :
-                                break;
                         }
                         
                         i++;
