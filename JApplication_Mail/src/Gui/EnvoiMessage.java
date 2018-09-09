@@ -258,10 +258,11 @@ public class EnvoiMessage extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     public void ClearAllText() {
-        jTF_To.setText("");
-        jTF_Subject.setText("");
-        jTA_Message.setText("");
+        jTF_To.setText("vincelempirette@gmail.com");
+        jTF_Subject.setText("test");
+        jTA_Message.setText("test");
         vecPieceAttachees.clear();
+        jLabel4.setText("");
     }
     
     private String getFileExtension(File file) {
