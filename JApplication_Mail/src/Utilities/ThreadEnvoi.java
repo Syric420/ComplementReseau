@@ -56,11 +56,12 @@ public class ThreadEnvoi extends Thread {
     @Override
     public void run() {
         Properties prop = System.getProperties();
-            prop.put("mail.smtp.host", "smtp.gmail.com");
+        
+            prop.put("mail.smtp.host", "u2.tech.hepl.local");
             System.out.println("Création d'une session mail");
-            prop.put("mail.smtp.starttls.enable", "true");
-            prop.put("file.encoding", charset);
-            prop.put("mail.smtp.port", "587");
+            //prop.put("mail.smtp.starttls.enable", "true");
+            //prop.put("file.encoding", charset);
+            //prop.put("mail.smtp.port", "587");
             Session sess = Session.getDefaultInstance(prop, null);
             
             String mdp = this.getMdp();

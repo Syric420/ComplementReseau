@@ -31,7 +31,11 @@ public class MessageView {
     @Override
     public String toString() {
         try {
-            return message.getFrom()[0] + " : " +message.getSubject();
+            if(message!=null)
+                //return message.getFrom()[0] + " : " +message.getSubject();  
+                //return message.getFrom()[0].toString();  
+            return message.getSubject();
+            
         } catch (MessagingException ex) {
             Logger.getLogger(MessageView.class.getName()).log(Level.SEVERE, null, ex);
         }

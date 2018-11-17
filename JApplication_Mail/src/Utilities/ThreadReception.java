@@ -38,7 +38,7 @@ public class ThreadReception extends Thread{
 
     public ThreadReception(long tempsMili, String user, String mdp, String host, JApplication_Mail gui) {
         this.tempsMili = tempsMili;
-        this.user = "recent:"+user;
+        this.user = user;
         this.mdp = mdp;
         this.gui = gui;
         this.host = host;
@@ -55,24 +55,24 @@ public class ThreadReception extends Thread{
             Properties prop = System.getProperties();
             
             System.out.println("Création d'une session mail");
-            prop.put("mail.store.protocol", "pop3s");
-            prop.put("mail.pop3.host", "pop.gmail.com");  
-           
-            prop.put("mail.pop3.user", user);
+            //prop.put("mail.store.protocol", "pop3s");
+            prop.put("mail.pop3.host", "u2.tech.hepl.local");  
+            prop.put("mail.disable.top", true);
+            /*prop.put("mail.pop3.user", user);
             prop.put("mail.pop3.socketFactory", 995);
             prop.put("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            prop.put("mail.pop3.port", 995);
+            prop.put("mail.pop3.port", 995);*/
 
-    Session session = Session.getInstance(prop,new Authenticator() {
+    /*Session session = Session.getInstance(prop,new Authenticator() {
       @Override
       protected PasswordAuthentication getPasswordAuthentication() {
           return new PasswordAuthentication(user, mdp);
 
       }
-    });
+    });*/
       
             
-
+            Session session = Session.getDefaultInstance(prop, null);
             //prop.list(System.out);
             String Local = this.getUser();
             String pwd = this.getMdp();
@@ -88,6 +88,7 @@ public class ThreadReception extends Thread{
             {
                 MessageView msgView = new MessageView(msg[nbMessagesCharges]);
                 gui.dlm.add(0,msgView);
+                System.out.println("nbMessages chargés = "+nbMessagesCharges);
                 //Thread.sleep(2);
             }
             

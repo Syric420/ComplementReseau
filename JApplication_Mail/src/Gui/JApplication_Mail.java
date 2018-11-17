@@ -243,7 +243,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 Header h = (Header)e.nextElement();
                 while (e.hasMoreElements())
                 {
-                    //System.out.println(h.getName() + " --> " + h.getValue());
+                    System.out.println(h.getName() + " --> " + h.getValue());
                     String name = h.getName();
                     String value = h.getValue();
                     if(value.length()>0 && name.equalsIgnoreCase("Received"))
@@ -326,7 +326,7 @@ public class JApplication_Mail extends javax.swing.JFrame {
                 int i = jList1.getSelectedIndex();
                 MessageView msgView = (MessageView) dlm.get(i);
                 Message msg = msgView.getMessage();
-                jTF_From.setText(msg.getFrom()[0].toString());
+                //jTF_From.setText(msg.getFrom()[0].toString());
                 jTF_Subject.setText(msg.getSubject());
                 if(msg.isMimeType("multipart/*"))
                 {
