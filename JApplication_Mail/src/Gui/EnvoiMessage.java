@@ -67,7 +67,7 @@ public class EnvoiMessage extends javax.swing.JDialog {
 
         jLabel1.setText("To:");
 
-        jTF_To.setText("vincelempirette@gmail.com");
+        jTF_To.setText("hooghen@u2.tech.hepl.local");
 
         jLabel2.setText("Subject:");
 

@@ -104,7 +104,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTF_To">
       <Properties>
-        <Property name="text" type="java.lang.String" value="vincelempirette@gmail.com"/>
+        <Property name="text" type="java.lang.String" value="hooghen@u2.tech.hepl.local"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
